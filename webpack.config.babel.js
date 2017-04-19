@@ -11,7 +11,7 @@ export default {
   },
 
   resolve: {
-    extensions: ['.js', '.styl']
+    extensions: ['.js', '.css']
   },
 
   module: {
@@ -21,11 +21,10 @@ export default {
         loader: 'pug-loader'
       },
       {
-        test: /\.styl$/,
+        test: /\.css$/,
         use: [
           'style-loader',
-          'css-loader',
-          'stylus-loader'
+          'css-loader'
         ]
       }
     ]

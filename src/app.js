@@ -1,33 +1,62 @@
 import './styles'
 import * as d3 from 'd3'
-import {scaleLinear} from 'd3-scale'
 
-const data2 = {
-  legends: {
-    keysAxis: 'Hazard Category',
-    valuesAxis: 'Total'
-  },
-  data: {
-    'Confined Space': 70,
-    'Hotwork': 15,
-    'Occupational Health': 34,
-    'Road Risk': 3
-  }
-}
+const data = [
+  {'Hazard Category': 'Confined Space', 'Incidents': 70},
+  {'Hazard Category': 'Hotwork', 'Incidents': 15},
+  {'Hazard Category': 'Occupational Health', 'Incidents': 34},
+  {'Hazard Category': 'Road Risk', 'Incidents': 3}
+]
 
-const data = [4, 8, 15, 16, 23, 42, 66, 1, 33, 44, 55]
+const outerWidth = 760
+const outerHeight = 400
+const margin = { left: 90, top: 30, right: 30, bottom: 30 }
 
-const x = scaleLinear()
-    .domain([0, d3.max(data)])
-    .range([0, 420])
+const xColumn = 'Hazard Category'
+const yColumn = 'Incidents'
 
-d3
-  .select('body')
-  .append('div')
-  .selectAll('div')
+const innerWidth = outerWidth - margin.left - margin.right
+const innerHeight = outerHeight - margin.top - margin.bottom
+
+const svg = d3.select('body').append('svg')
+  .attr('width', outerWidth)
+  .attr('height', outerHeight)
+
+const g = svg.append('g')
+  .attr('transform', 'translate(' + margin.left + ',' + margin.top + ')')
+
+const xScale = d3
+  .scaleBand()
+  .rangeRound([0, innerWidth])
+  .padding(0.1)
+  .domain(data.map(d => d[xColumn]))
+
+const yScale = d3
+  .scaleLinear()
+  .range([innerHeight, 0])
+  .domain([0, d3.max(data, d => d[yColumn])])
+
+g.append('g')
+  .attr('class', 'axis axis--x')
+  .attr('transform', 'translate(0,' + innerHeight + ')')
+  .call(d3.axisBottom(xScale))
+
+g.append('g')
+  .attr('class', 'axis axis--y')
+  .call(d3.axisLeft(yScale).ticks(10))
+  .append('text')
+  .attr('transform', 'rotate(-90)')
+  .attr('y', 6)
+  .attr('dy', '0.71em')
+  .attr('text-anchor', 'end')
+  .text(yColumn)
+
+g.selectAll('rect')
   .data(data)
   .enter()
-  .append('div')
-  .style('width', (d) => x(d) + 'px')
-  .style('background-color', 'red')
-  .text(d => d)
+  .append('rect')
+  .attr('class', 'bar')
+  .attr('x', d => xScale(d[xColumn]))
+  .attr('y', d => yScale(d[yColumn]))
+  .attr('width', xScale.bandwidth())
+  .attr('height', d => innerHeight - yScale(d[yColumn]))
