@@ -1,13 +1,6 @@
 import './styles'
 import * as d3 from 'd3'
 
-const data = [
-  {'Hazard Category': 'Confined Space', 'Incidents': 70},
-  {'Hazard Category': 'Hotwork', 'Incidents': 15},
-  {'Hazard Category': 'Occupational Health', 'Incidents': 34},
-  {'Hazard Category': 'Road Risk', 'Incidents': 3}
-]
-
 const outerWidth = 760
 const outerHeight = 400
 const margin = { left: 90, top: 30, right: 30, bottom: 30 }
